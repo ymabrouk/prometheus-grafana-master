@@ -1,0 +1,157 @@
+{
+    "id": "vericash-system-health-dashboard",
+    "uid": "vericash-system-health-dashboard",
+    "title": "System Health Dashboard",
+    "tags": ["system", "node-exporter"],
+    "timezone": "browser",
+    "schemaVersion": 32,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "title": "CPU Usage",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "{{ instance }}",
+            "intervalFactor": 2
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percent",
+            "min": 0,
+            "max": 100
+          }
+        ],
+        "lines": true,
+        "fill": 1,
+        "linewidth": 2,
+        "aliasColors": {
+          "{{ instance }}": "#7EB26D"
+        }
+      },
+      {
+        "title": "Memory Usage",
+        "type": "gauge",
+        "gridPos": {"x": 0, "y": 8, "w": 6, "h": 6},
+        "targets": [
+          {
+            "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+            "legendFormat": "Memory Usage"
+          }
+        ],
+        "gauge": {
+          "minValue": 0,
+          "maxValue": 100,
+          "thresholds": "70,85",
+          "color": {
+            "mode": "thresholds",
+            "colors": ["#299c46", "#e5ac0e", "#d44a3a"]
+          }
+        }
+      },
+      {
+        "title": "Disk Usage",
+        "type": "graph",
+        "gridPos": {"x": 6, "y": 8, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "node_filesystem_size_bytes - node_filesystem_avail_bytes",
+            "legendFormat": "{{ mountpoint }}",
+            "intervalFactor": 2
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "bytes",
+            "min": 0
+          }
+        ],
+        "lines": true,
+        "fill": 1,
+        "linewidth": 2
+      },
+      {
+        "title": "Network Traffic",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 14, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(node_network_receive_bytes_total[5m])",
+            "legendFormat": "Receive - {{ instance }}",
+            "intervalFactor": 2
+          },
+          {
+            "expr": "rate(node_network_transmit_bytes_total[5m])",
+            "legendFormat": "Transmit - {{ instance }}",
+            "intervalFactor": 2
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "bytes",
+            "min": 0
+          }
+        ],
+        "lines": true,
+        "fill": 1,
+        "linewidth": 2
+      },
+      {
+        "title": "System Load",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "node_load1",
+            "legendFormat": "1m Load - {{ instance }}",
+            "intervalFactor": 2
+          },
+          {
+            "expr": "node_load5",
+            "legendFormat": "5m Load - {{ instance }}",
+            "intervalFactor": 2
+          },
+          {
+            "expr": "node_load15",
+            "legendFormat": "15m Load - {{ instance }}",
+            "intervalFactor": 2
+          }
+        ],
+        "lines": true,
+        "fill": 1,
+        "linewidth": 2,
+        "yaxes": [
+          {
+            "format": "short",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "title": "Disk I/O",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 14, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "rate(node_disk_read_bytes_total[5m])",
+            "legendFormat": "Disk Read - {{ instance }}"
+          },
+          {
+            "expr": "rate(node_disk_written_bytes_total[5m])",
+            "legendFormat": "Disk Write - {{ instance }}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "bytes",
+            "min": 0
+          }
+        ]
+      }
+    ]
+  }
+

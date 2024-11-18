@@ -1,0 +1,22 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: grafana-default-email
+    receivers:
+      - uid: ee1id5gf5rapse
+        type: email
+        settings:
+          addresses: ymabrouk@citglobal.com,yasser.mabrouk@gmail.com
+          singleEmail: true
+        disableResolveMessage: false
+
+# Notification Policies Configuration with Routes
+policies:
+  - orgId: 1
+    receiver: grafana-default-email  # Set the receiver to the one defined above
+    routes:
+      - object_matchers:                     # Route based on object matchers
+          - - severity                       # Match alert with label 'severity'
+            - =                              # Equality condition
+            - critical                       # Match severity = critical
+        receiver: grafana-default-email       # Route critical alerts to this receiver

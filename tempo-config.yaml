@@ -1,0 +1,60 @@
+server:
+  http_listen_port: 3200  # Port for Tempo to listen on for HTTP requests and metrics
+
+distributor:
+  receivers:
+    jaeger:
+      protocols:
+        grpc:
+        thrift_binary:
+        thrift_compact:
+        thrift_http:
+    otlp:
+      protocols:
+        grpc:
+        http:
+    zipkin:
+      endpoint: 9411
+
+ingester:
+  trace_idle_period: 30s  # Period after which idle traces are flushed
+  max_block_bytes: 1_000_000
+  max_block_duration: 5m
+
+compactor:
+  compaction:
+    compaction_window: 1h
+    retention: 72h  # How long to retain compacted traces
+
+querier:
+  frontend_worker:
+    frontend_address: 127.0.0.1:3200
+  query_ingesters: true
+  query_frontend:
+    parallelism: 4
+
+query_frontend:
+  max_retries: 5
+  max_look_back_period: 72h  # Limit of the query time range
+  parallelism: 4
+
+storage:
+  trace:
+    backend: local  # Backend storage for traces; "local" is the default
+    path: /tmp/tempo/traces  # File path to store traces if "local" backend is used
+    wal:
+      path: /tmp/tempo/wal  # Write-ahead log path
+      enabled: true
+
+overrides:
+  per_tenant_override_config: /etc/tempo/overrides.yaml
+  per_tenant_override_enabled: false
+
+metrics_generator:
+  processors:
+    span_metrics:
+      dimensions: ["service.name", "operation"]
+
+memberlist:
+  abort_if_cluster_join_fails: false
+  bind_port: 7946

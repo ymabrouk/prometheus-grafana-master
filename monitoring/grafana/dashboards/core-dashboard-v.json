@@ -1,0 +1,272 @@
+{
+  "title": "Core service Monitoring Dashboard",
+  "uid": "core-monitoring-dashboard",
+  "version": 1,
+  "annotations": {
+    "list": []
+  },
+  "description": "Dashboard to monitor Core Service metrics.",
+  "editable": true,
+  "panels": [
+    {
+      "title": "Service Uptime",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"vericash-core-services\"}",
+          "legendFormat": "Service Uptime",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          },
+          "mappings": [
+            { "from": 0, "text": "DOWN" },
+            { "from": 1, "text": "UP" }
+          ]
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["last"],
+          "values": false
+        },
+        "textMode": "value",
+        "colorMode": "value"
+      },
+      "description": "Shows whether the API Gateway is UP or DOWN."
+    },
+    {
+      "title": "Number of Instances Up and Running",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "count(up{job=\"vericash-core-services\"})",
+          "legendFormat": "Instances Up",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "description": "Displays the number of instances currently up and running."
+    },
+    {
+      "title": "Process CPU Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "expr": "process_cpu_usage{job=\"vericash-core-services\"}",
+          "legendFormat": "CPU Usage",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "options": {
+        "orientation": "horizontal"
+      },
+      "description": "Displays the recent CPU usage of the API Gateway."
+    },
+    {
+      "title": "JVM Memory Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{job=\"vericash-core-services\", area=\"heap\"}",
+          "legendFormat": "Used Heap Memory",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "description": "Shows the amount of used heap memory in bytes."
+    },
+    {
+      "title": "Active Database Connections",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "targets": [
+        {
+          "expr": "dataSource_connections_active{job=\"vericash-core-services\"}",
+          "legendFormat": "Active Connections",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "description": "Displays the number of active database connections."
+    },
+    {
+      "title": "HTTP Server Requests Count",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "targets": [
+        {
+          "expr": "http_server_requests_seconds_count{job=\"vericash-core-services\"}",
+          "legendFormat": "HTTP Requests",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "description": "Displays the count of HTTP requests processed."
+    },
+    {
+      "title": "JVM Garbage Collection",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "targets": [
+        {
+          "expr": "jvm_gc_pause_seconds_sum{job=\"vericash-core-services\"}",
+          "legendFormat": "Garbage Collection Time",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "seconds"
+        }
+      },
+      "description": "Displays the total time spent in garbage collection."
+    },
+    {
+      "title": "System CPU Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "targets": [
+        {
+          "expr": "system_cpu_usage{job=\"vericash-core-services\"}",
+          "legendFormat": "System CPU Usage",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      },
+      "description": "Shows the percentage of system CPU usage."
+    },
+    {
+      "title": "JVM Threads Live",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "targets": [
+        {
+          "expr": "jvm_threads_live{job=\"vericash-core-services\"}",
+          "legendFormat": "Live Threads",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "description": "Displays the number of live JVM threads."
+    },
+    {
+      "title": "Instance Running Time",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "targets": [
+        {
+          "expr": "time() - process_start_time_seconds{job=\"vericash-core-services\"}",
+          "legendFormat": "Running Time (seconds)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "seconds"
+        }
+      },
+      "description": "Shows the total running time of the instance in seconds."
+    }
+  ],
+  "schemaVersion": 30,
+  "refresh": "5s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  }
+}

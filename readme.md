@@ -20,7 +20,7 @@ mvn clean package
 Now when the application has been build we can start running our services by running:
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 After all services have started successfully, you can navigate to the following urls:
@@ -29,3 +29,15 @@ After all services have started successfully, you can navigate to the following 
 - Prometheus      - http://localhost:9090/ , http://localhost:9090/targets 
 - Grafana         - http://localhost:3000/, 
 - Zipkin		  - http://localhost:9411/zipkin/dependency , http://localhost:3000/explore 
+
+
+
+ docker-compose -p consul-cluster  -f concsul-docker-compose.yml down
+ docker-compose -p consul-cluster  -f consul-docker-compose.yml up -d --remove-orphans
+
+
+
+docker-compose -p cloud-observability down
+docker-compose -p consul-cluster  -f consul-docker-compose.yml up -d --remove-orphans
+
+

@@ -1,0 +1,4 @@
+[
+  {"targets": ["host.docker.internal:9898"]},
+  {"targets": ["host.docker.internal:9898"]}
+]

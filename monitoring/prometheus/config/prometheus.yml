@@ -1,0 +1,292 @@
+global:
+  scrape_interval: 15s  # Scrape targets every 15 seconds by default
+
+  external_labels:
+    monitor: 'vericash-monitoring'
+
+rule_files:
+  - '/etc/prometheus/alert_rules.yml'  # Specify the file containing your alerting rules.
+
+scrape_configs:
+  - job_name: 'System'
+    static_configs:
+      - targets: ['host.docker.internal:9182']
+
+  - job_name: 'tempo'
+    static_configs:
+      - targets: ['tempo:3200']
+
+  # Uncomment and configure the following job if needed for dynamic targets
+  #  - job_name: 'dynamic-core-service'
+  #    file_sd_configs:
+  #      - files:
+  #          - '/etc/prometheus/dynamic_targets.json'
+
+  - job_name: 'vericash-core-services-without-consul'
+    static_configs:
+      - targets: ['host.docker.internal:9898']  # Replace with your actual service address and port
+
+    relabel_configs:
+      - target_label: __metrics_path__
+        replacement: '/prometheus'  # Path to scrape metrics from
+
+  - job_name: 'vericash-core-services'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'vericash-core-services'
+        action: keep
+
+      - source_labels: [__meta_consul_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'config-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'config-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/actuator/prometheus'
+
+  - job_name: 'api-gateway'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'api-gateway'
+        action: keep
+
+      - source_labels: [__meta_consul_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'agent-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'agent-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'batch-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'batch-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'business-entity-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'business-entity-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'commons-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'commons-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'notification-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'notification-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'reconciliation-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'reconciliation-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'reports-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'reports-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'scheduler-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'scheduler-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'subscriber-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'subscriber-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'user-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'user-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'wallet-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'wallet-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+  - job_name: 'workflow-service'
+    consul_sd_configs:
+      - server: 'host.docker.internal:8500'
+
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        regex: 'workflow-service'
+        action: keep
+
+      - source_labels: [__meta_consul_service_address, __meta_consul_service_port]
+        separator: ':'
+        target_label: __address__
+        replacement: '${1}:${2}'
+
+      - target_label: __metrics_path__
+        replacement: '/prometheus'
+
+#alerting:
+#  alertmanagers:
+#    - static_configs:
+#        - targets:
+#            - 'alertmanager:9093'
